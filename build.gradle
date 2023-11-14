@@ -1,0 +1,16 @@
+plugins {
+    id 'java'
+}
+
+group = 'bot.discord'
+version = '1.0.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation("net.dv8tion:JDA:5.0.0-beta.17")
+    // SQLite JDBC driver
+    implementation 'org.xerial:sqlite-jdbc:3.34.0'
+}

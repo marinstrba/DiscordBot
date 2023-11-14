@@ -1,5 +1,6 @@
 package bot.discord;
 
+import bot.discord.commands.AdvancedStats;
 import bot.discord.commands.PlayerStats;
 import bot.discord.commands.Info;
 import net.dv8tion.jda.api.JDA;
@@ -20,6 +21,7 @@ public class Main {
         {
             Connection conn = DatabaseConnection.getConnection();
             jda.addEventListener(new PlayerStats(conn));
+            jda.addEventListener(new AdvancedStats(conn));
         }
         catch (SQLException e)
         {

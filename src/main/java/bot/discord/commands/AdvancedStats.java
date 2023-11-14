@@ -5,12 +5,12 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import java.sql.*;
 
-public class PlayerStats extends ListenerAdapter {
+public class AdvancedStats extends ListenerAdapter {
 
     private final Connection conn;
-    private final String command = "!stats";
+    private final String command = "!advanced";
     private final String getPlayerStats = "SELECT * FROM fifa_players WHERE full_name LIKE ?";
-    public PlayerStats (Connection conn)
+    public AdvancedStats(Connection conn)
     {
         this.conn = conn;
         System.out.println("Connection to the database was succesfull!");
@@ -21,10 +21,10 @@ public class PlayerStats extends ListenerAdapter {
         String message = event.getMessage().getContentRaw();
         if(!message.startsWith(command)) return;
         String playerName = message.substring(command.length()).trim();
+
         if (playerName.isEmpty())
         {
-            event.getChannel().sendMessage("Please provide a players name.").queue();
-            return;
+            event.getChannel().sendMessage("Please provide a players name").queue();
         }
 
         try (PreparedStatement statement = conn.prepareStatement(getPlayerStats))
@@ -33,17 +33,17 @@ public class PlayerStats extends ListenerAdapter {
             ResultSet result = statement.executeQuery();
             if(result.next())
             {
-                int age = result.getInt("age");
-                double height = result.getDouble("height_cm");
-                String position = result.getString("positions");
-                String nationality = result.getString("nationality");
-                String rating = result.getString("overall_rating");
+                String finishing = result.getString("finishing");
+                String dribbling = result.getString("dribbling");
+                String sprintSpeed = result.getString("sprint_speed");
+                String strength = result.getString("strength");
+                String stamina = result.getString("stamina");
                 String outputMessage =
-                                        "Age: " + age + "\n" +
-                                        "Height: " + height + "\n" +
-                                        "Positions: " + position + "\n" +
-                                        "Nationality: " + nationality + "\n" +
-                                        "Overall rating: " + rating + "\n";
+                        "Finishing: " + finishing + "\n" +
+                        "Dribbling: " + dribbling + "\n" +
+                        "Sprint speed: " + sprintSpeed + "\n" +
+                        "Strength: " + strength + "\n" +
+                        "Stamina: " + stamina + "\n";
                 event.getChannel().sendMessage(outputMessage).queue();
             }
             else
@@ -53,8 +53,8 @@ public class PlayerStats extends ListenerAdapter {
         }
         catch (SQLException e)
         {
-            System.out.println("Database error: " + e.getMessage());
-            event.getChannel().sendMessage("An error has occured while retrieving player data.").queue();
+            event.getChannel().sendMessage("Mistake while retrieving player data: " + e.getMessage()).queue();
         }
     }
+
 }
